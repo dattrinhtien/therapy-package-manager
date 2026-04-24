@@ -1,36 +1,172 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Quản Lý Gói Trị Liệu (Therapy Package Manager)
 
-## Getting Started
+Ứng dụng web quản lý bệnh nhân, dịch vụ trị liệu, gói trị liệu (5 ngày / 10 ngày), lịch hẹn, thanh toán và báo cáo cho phòng trị liệu / y học cổ truyền.
 
-First, run the development server:
+## Công nghệ sử dụng
+
+- **Framework:** Next.js 15 (App Router)
+- **Ngôn ngữ:** TypeScript
+- **UI:** Tailwind CSS + shadcn/ui
+- **Icons:** Lucide React
+- **Biểu đồ:** Recharts
+- **Backend/Auth/DB:** Supabase (Auth + PostgreSQL + RLS)
+- **Deploy:** Vercel
+
+## Tính năng chính
+
+- 🔐 Đăng ký / Đăng nhập / Đăng xuất (Supabase Auth)
+- 👥 Quản lý bệnh nhân (CRUD + tìm kiếm)
+- 🩺 Quản lý dịch vụ trị liệu
+- 📦 Quản lý gói trị liệu (5/10 ngày, tùy chỉnh)
+- 📅 Quản lý lịch hẹn (đánh dấu đã đến / không đến)
+- 💳 Quản lý thanh toán & công nợ
+- 📊 Báo cáo biểu đồ (doanh thu, bệnh nhân, dịch vụ)
+- 🔒 Row Level Security (mỗi user chỉ thấy data của mình)
+- 📱 Responsive trên desktop, tablet, mobile
+
+## Cài đặt Local
+
+### 1. Clone repository
+
+```bash
+git clone <your-repo-url>
+cd therapy-package-manager
+```
+
+### 2. Cài dependencies
+
+```bash
+npm install
+```
+
+### 3. Tạo Supabase Project
+
+1. Truy cập [https://supabase.com](https://supabase.com) và tạo tài khoản.
+2. Tạo project mới (chọn region gần nhất, VD: Singapore).
+3. Đợi project khởi tạo xong.
+
+### 4. Chạy Schema SQL
+
+1. Trong Supabase Dashboard, vào **SQL Editor**.
+2. Tạo query mới.
+3. Copy toàn bộ nội dung file `supabase/schema.sql` và paste vào.
+4. Nhấn **Run** để tạo bảng, index, RLS policies.
+
+### 5. Cấu hình Supabase Auth
+
+1. Trong Supabase Dashboard → **Authentication** → **Providers**.
+2. Đảm bảo **Email** provider đã được bật.
+3. (Tùy chọn) Tắt **Confirm email** trong **Authentication** → **Settings** nếu muốn test nhanh mà không cần xác nhận email.
+
+### 6. Lấy API Keys
+
+1. Vào **Settings** → **API** trong Supabase Dashboard.
+2. Copy:
+   - **Project URL** → `NEXT_PUBLIC_SUPABASE_URL`
+   - **anon/public key** → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+
+### 7. Tạo file .env.local
+
+```bash
+cp .env.local.example .env.local
+```
+
+Mở `.env.local` và điền giá trị:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+```
+
+### 8. Chạy ứng dụng
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Mở [http://localhost:3000](http://localhost:3000) trong trình duyệt.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Kết nối GitHub
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+git init
+git add .
+git commit -m "Initial commit: Therapy Package Manager MVP"
+git branch -M main
+git remote add origin https://github.com/your-username/therapy-package-manager.git
+git push -u origin main
+```
 
-## Learn More
+## Deploy lên Vercel
 
-To learn more about Next.js, take a look at the following resources:
+### 1. Import project
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Truy cập [https://vercel.com](https://vercel.com).
+2. Nhấn **Add New** → **Project**.
+3. Import repository từ GitHub.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 2. Cấu hình Environment Variables
 
-## Deploy on Vercel
+Trong Vercel project settings → **Environment Variables**, thêm:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+| Variable | Value |
+|----------|-------|
+| `NEXT_PUBLIC_SUPABASE_URL` | `https://your-project.supabase.co` |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | `your-anon-key` |
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 3. Deploy
+
+Nhấn **Deploy**. Vercel sẽ tự build và deploy.
+
+### 4. Cập nhật Supabase Redirect URL
+
+Sau khi deploy, vào Supabase Dashboard → **Authentication** → **URL Configuration**:
+- Thêm domain Vercel (VD: `https://your-app.vercel.app`) vào **Site URL** và **Redirect URLs**.
+
+## Checklist kiểm thử
+
+- [ ] Đăng ký tài khoản
+- [ ] Đăng nhập
+- [ ] Vào Dashboard
+- [ ] Thêm bệnh nhân mới
+- [ ] Thêm dịch vụ mới
+- [ ] Tạo gói trị liệu 5 ngày
+- [ ] Tạo gói trị liệu 10 ngày
+- [ ] Tạo lịch hẹn
+- [ ] Đánh dấu "Đã đến" → kiểm tra số buổi tăng
+- [ ] Ghi nhận thanh toán một phần → kiểm tra còn nợ
+- [ ] Ghi nhận thanh toán đủ → kiểm tra hết nợ
+- [ ] Xem báo cáo doanh thu
+- [ ] Xem biểu đồ
+- [ ] Kiểm tra responsive trên mobile
+
+## Cấu trúc thư mục
+
+```
+src/
+├── app/
+│   ├── layout.tsx          # Root layout
+│   ├── page.tsx            # Root redirect
+│   ├── login/page.tsx      # Đăng nhập
+│   ├── signup/page.tsx     # Đăng ký
+│   ├── dashboard/page.tsx  # Tổng quan
+│   ├── patients/           # Bệnh nhân
+│   ├── services/page.tsx   # Dịch vụ
+│   ├── therapy-packages/   # Gói trị liệu
+│   ├── appointments/       # Lịch hẹn
+│   ├── payments/           # Thanh toán
+│   ├── reports/            # Báo cáo
+│   └── settings/           # Cài đặt
+├── components/
+│   ├── layout/             # AppSidebar, AppShell
+│   └── ui/                 # shadcn/ui components
+├── lib/
+│   ├── supabase/           # Client, Server, Middleware
+│   ├── types.ts            # TypeScript types
+│   └── utils.ts            # Utilities
+└── middleware.ts            # Route protection
+```
+
+## License
+
+MIT
